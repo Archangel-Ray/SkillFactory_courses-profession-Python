@@ -5,6 +5,10 @@ number_of_players = 2
 # назначает обозначение игроков
 players = []
 while len(players) < number_of_players:
+    if not players:
+        print('Первый игрок, ', end='')
+    else:
+        print('Второй игрок, ', end='')
     letter = input('выбери букву которой будешь играть - ')
     if letter.isalpha():
         if len(letter) == 1:
