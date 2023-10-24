@@ -1,10 +1,21 @@
+from random import choice
+
 # можно сделать несколько игроков
 # number_of_players = int(input('сколько игроков будет играть? '))
 number_of_players = 2
 
+# игра с компьтером
+print('Будешь играть с компьютером?')
+computer = (True if input('нажми "+" если ДА\nили любую клавишу если НЕТ\n') == '+' else False)
+
 # назначает обозначение игроков
 players = []
+letter_computer = ''
 while len(players) < number_of_players:
+    if computer:
+        letter_computer = choice('XO')
+        players.append(letter_computer)
+        print(f'Компьютер выбрал букву {letter_computer}\n')
     if not players:
         print('Первый игрок, ', end='')
     else:
@@ -35,6 +46,20 @@ def display_field():
     for i in range(len(battlefield)):
         print(i + 1, *battlefield[i])
     print()
+
+
+def computer_progress():
+    """
+    Ход компьтерного игрока
+    :return:
+    """
+    list_of_free_coordinates = []
+    for row in range(field_size):
+        for point in range(field_size):
+            if battlefield[row][point] == ' ':
+                list_of_free_coordinates.append((row, point))
+    coordinates = choice(list_of_free_coordinates)
+    battlefield[coordinates[0]][coordinates[1]] = letter_computer
 
 
 # определяет конец игры без выигрыша.
@@ -157,29 +182,33 @@ while check_winnings() and checking_for_a_draw():
     last_move_number = next(move_number)
     print(f'{last_move_number} ход')
     print(f'ходит игрок - {player_walks}')
-    print('введи координаты хода')
-    print(f'      (должно быть число от 1 до {field_size})')
-    player_move = [0, 0, True]
-    while player_move[2]:
-        while player_move[0] == 0:
-            line = input('номер строки - ')
-            if line in ''.join([str(i) for i in range(1, field_size + 1)]):
-                player_move[0] = int(line)
+    if player_walks == letter_computer:
+        computer_progress()
+        display_field()
+    else:
+        print('введи координаты хода')
+        print(f'      (должно быть число от 1 до {field_size})')
+        player_move = [0, 0, True]
+        while player_move[2]:
+            while player_move[0] == 0:
+                line = input('номер строки - ')
+                if line in ''.join([str(i) for i in range(1, field_size + 1)]):
+                    player_move[0] = int(line)
+                else:
+                    print(f'''   ! должно быть число от 1 до {field_size}''')
+            while player_move[1] == 0:
+                line = input('номер столбца - ')
+                if line in ''.join([str(i) for i in range(1, field_size + 1)]):
+                    player_move[1] = int(line)
+                else:
+                    print(f'''   ! должно быть число от 1 до {field_size}''')
+            if battlefield[player_move[0] - 1][player_move[1] - 1] == ' ':
+                battlefield[player_move[0] - 1][player_move[1] - 1] = player_walks
+                display_field()
+                player_move[2] = False
             else:
-                print(f'''   ! должно быть число от 1 до {field_size}''')
-        while player_move[1] == 0:
-            line = input('номер столбца - ')
-            if line in ''.join([str(i) for i in range(1, field_size + 1)]):
-                player_move[1] = int(line)
-            else:
-                print(f'''   ! должно быть число от 1 до {field_size}''')
-        if battlefield[player_move[0] - 1][player_move[1] - 1] == ' ':
-            battlefield[player_move[0] - 1][player_move[1] - 1] = player_walks
-            display_field()
-            player_move[2] = False
-        else:
-            print('эта клетка занята')
-            player_move[0] = player_move[1] = 0
+                print('эта клетка занята')
+                player_move[0] = player_move[1] = 0
 
 
 if ended_in_a_draw:
