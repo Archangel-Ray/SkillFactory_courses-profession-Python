@@ -1,6 +1,6 @@
 import telebot
 
-TOKEN = "6888696355:AAE6QKVoqX6mv0kXDhjNAet1tYokXfAu8DE"
+TOKEN = open("F:/Python_projects_/AnotherEchoBoyBot.txt").read()
 
 bot = telebot.TeleBot(TOKEN)
 
